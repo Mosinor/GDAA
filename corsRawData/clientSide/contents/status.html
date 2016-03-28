@@ -1,0 +1,50 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4 class="text-primary">Data Logging Status</h4>
+	</div>
+	<div class="panel-body" ng-controller="statusCtrl" data-ng-init="getDiskStatus();getSessionStatus();getStationInfo();">
+
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr class="active">
+					<th>Total Space</th>
+					<th>In Use</th>
+					<th>Available</th>
+					<th>Ring Buffer</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="success">
+					<td>{{totalSpace}}</td>
+					<td>{{inUse}}</td>
+					<td>{{available}}</td>
+					<td><input type="checkbox" ng-model="ringBuffer" ng-disabled="true"></input></td>
+					<td>
+						<button type="button" class="btn btn-success btn-xs" ng-click="getDiskStatus();">
+							Refresh </button>
+					</td>
+					<td>
+						<button type="button" class="btn btn-warning btn-xs" ng-click="clearDisk();">
+							Clear Disk </button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br />
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label for="stationCode" class="col-sm-3 control-label">Station Code</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" id="stationCode"
+						placeholder="4Char Station Code" ng-model="stationInfo.stationCode" data-ng-init="stationInfo.stationCode=''"> </input>
+				</div>
+				<div class="col-sm-2">
+					<button type="submit" class="btn btn-primary" ng-click="setStationInfo();restartAllSessions();">Submit</button>
+				</div>
+				
+			</div>
+		</form>
+	</div>
+</div>

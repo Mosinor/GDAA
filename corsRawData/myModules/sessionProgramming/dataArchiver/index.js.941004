@@ -1,0 +1,121 @@
+var net = require('net');
+var fs = require('fs');
+var path = require('path');
+
+var Archiver = function(options, configFile, loggingDir, sessionID) {
+	var deliberateStop = false;
+	var mySocket = new net.Socket();
+//	console.log(mySocket);
+	var temp = 0;
+	var safety = setInterval(function() {
+		if (mySocket.bytesRead == temp && !mySocket._connecting) {
+			console.log('no more data received');
+			mySocket.end();
+			mySocket.destroy();
+			mySocket.unref();
+
+		}
+		temp = mySocket.bytesRead;
+		//console.log(mySocket._connecting);
+		//console.log(mySocket.bytesRead);
+	
+	}, 10000);
+	////////////////////////////////////////////////////
+	
+	var createLoggingFilePath = function(configFile, loggingDir, sessionID, myFn) {
+		try {
+			fs.readFile(configFile, function(err, data) {
+				if (err) {
+					return myFn(err, null);
+				}
+				var mainConfig = JSON.parse(data);
+				if (mainConfig.stationCode) {
+					var doy = new Date();
+					var year = doy.getFullYear().toString().substr(2,2);
+					doy = parseInt( (doy - (new Date(doy.getUTCFullYear(),0,1,0,0,0,1))) / 86400000 + 1) % 365;
+					doy = (doy < 10 ? ('00'+doy) : (doy < 100 ? ('0'+doy) : doy));
+					return myFn(null, path.join(loggingDir, mainConfig.stationCode + year + doy + sessionID + '.gnd'));
+				
+				} else {
+					return myFn('Main config file error', null);
+				}
+			});
+		} catch (e) {
+			return myFn(e, null);
+		}
+	};
+
+	this.startArchiver = function() {
+		deliberateStop = false;
+		mySocket.connect(options);
+//		mySocket.setTimeout(2000);
+	};
+
+	this.stopArchiver = function(myFn) {
+		mySocket.end();
+		mySocket.destroy();
+		mySocket.unref();
+		deliberateStop = true;
+		clearInterval(safety);
+		if (myFn){
+			myFn();
+
+		}
+	};
+
+	var thisObject = this;
+
+	var restartSocket = function() {
+		if (!deliberateStop) {
+			console.log('restarting...');
+			thisObject.startArchiver();
+		}
+	};
+
+	////////////////////////////////////////////////////	
+
+	createLoggingFilePath(configFile, loggingDir, sessionID, function(err, loggingFilePath) {
+		mySocket.on('data', function(data) {
+			fs.appendFile(loggingFilePath, data);
+		});
+
+	});
+
+	
+
+	mySocket.on('end', function() {
+		mySocket.destroy();
+		mySocket.unref();
+	});
+
+	mySocket.on('error', function(err) {
+		mySocket.end();
+		mySocket.destroy();
+		mySocket.unref();
+	});
+
+	mySocket.on('close', function() {
+		console.log('socket closed.');
+		setTimeout(function() {
+			restartSocket();
+		}, 3000);
+	});
+
+	
+	
+//	mySocket.on('timeout', function() {
+//		mySocket.end();
+//		mySocket.destroy();
+//		console.log('timeout...', mySocket._events.timeout);
+//	});
+};
+
+
+
+module.exports = function(options, configFile, loggingDir, sessionID) {
+	var myArchiver = new Archiver(options, configFile, loggingDir, sessionID);
+	
+	return myArchiver;
+
+		
+};

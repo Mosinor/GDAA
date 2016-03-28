@@ -1,0 +1,133 @@
+var net = require('net');
+
+
+var Station = function() {
+	this.links = [];
+	var thisObject = this;
+	this.addTcpClient = function(priority, cb) {
+		var client = new net.Socket();
+		thisObject.links.push({type: 'tcpClient', priority: priority, body: client, connections: []});
+		if (cb) {
+			var index = thisObject.links.length - 1;
+			return cb(index);
+		} else {
+			return;
+		}
+	};
+	
+	this.addTcpServer = function(priority, cb) {
+		var server = new net.createServer();
+		thisObject.links.push({type: 'tcpServer', priority: priority, body: server, connections: []});
+		if (cb) {
+			var index = thisObject.links.length - 1;
+			return cb(index);
+		} else {
+			return;
+		}
+	};
+	
+
+	this.activeLink = function(link, options, cb) {
+
+		switch (link.type) {
+		case 'tcpClient':
+			link.body.connect(options.port, options.host);
+			link.body.on('connect', function() {
+				console.log('connected');
+			});
+			link.body.on('data', function(data) {
+				console.log(data.toString());
+			});
+			break;
+
+		case 'tcpServer':
+			link.body.listen(options.port);
+			link.body.on('listening', function() {
+				console.log('listening');
+			});
+			link.body.on('connection', function(sock) {
+				sock.on('data', function(data) {
+					console.log(data.toString());
+				});
+				link.connections.push(sock);
+			});
+			break;
+
+		default:
+			break;
+		}
+
+	};
+	
+	this.deactiveLink = function(link, cb) {
+
+		switch (link.type) {
+		case 'tcpClient':
+			link.body.end();
+			link.body.unref();
+			link.body.destroy();
+			break;
+
+		case 'tcpServer':
+			link.body.close();
+			link.connections.forEach(function(sock, i) {
+				sock.end();
+				sock.unref();
+				sock.destroy();
+			});
+			link.body.unref();
+			break;
+
+		default:
+			break;
+		}
+	};
+	
+	this.removeLink = function(index) {
+		thisObject.
+		thisObject.links.splice(index, 1);
+	};
+	
+
+	
+};
+
+var myStation = new Station();
+myStation.addTcpClient();
+myStation.addTcpServer();
+
+myStation.activeLink(myStation.links[0], {port: 6006, host: '91.98.225.139'});
+setTimeout(function() {
+	myStation.deactiveLink(myStation.links[0]);
+	myStation.activeLink(myStation.links[1], {port: 6057});
+}, 5000);
+
+setTimeout(function() {
+	
+	myStation.deactiveLink(myStation.links[1]);
+}, 30000);
+
+//connection.on('connect', function() {
+//	console.log('connect');
+//});
+//
+//connection.on('data', function() {
+//	console.log('data');
+//	
+//});
+//
+//connection.on('close', function() {
+//	console.log('close');
+//	
+//});
+//
+//connection.on('end', function() {
+//	console.log('end');
+//	
+//});
+//
+//connection.on('error', function() {
+//	console.log('error');
+//	
+//});
+//

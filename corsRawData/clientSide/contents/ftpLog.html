@@ -1,0 +1,63 @@
+<div class="panel panel-default" ng-controller="ftpConfiguration">
+	<div class="panel-heading">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="col-md-10">
+					<h4 class="text-primary">FTP Push Log</h4>
+				</div>
+				<div class="col-md-2">
+					<button type="button" class="btn btn-success btn-xs"
+						ng-click="readLogFile();">Refresh</button>
+				</div>
+
+			</div>
+
+
+		</div>
+	</div>
+	
+	<div class="panel-body" data-ng-init="readLogFile();">
+					<label for="search" class="control-label">Search</label>
+				<div>
+					<input type="text" class="form-control" id="search"
+						placeholder="Type some text to filter" ng-model="search" data-ng-init="search=''"> </input>
+						
+				</div>
+				<br/>
+	
+		<div  style="height: 200px; overflow: auto">
+
+			<table class="table table-hover table-condensed">
+				<tbody>
+					<tr ng-repeat="log in logFile | filter:search">
+						<td ng-if="$odd">{{ $index + 1 }}</td>
+						<td ng-if="$even" class="active">{{ $index
+							+ 1 }}</td>
+						<td ng-if="$odd">{{ log }}</td>
+						<td ng-if="$even" class="active">{{
+							log }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="panel-footer">
+
+		<!-- <div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-4">
+						<button type="button" class="btn btn-danger btn-default" ng-click="deleteFiles();">
+							Delete Selected Items</button>
+					</div>
+					<div class="col-md-4">
+					</div>
+					<div class="col-md-4">
+						<button type="button" class="btn btn-primary"
+							ng-click="getDataFiles();">Download Selected Items</button>
+					</div>
+				</div>
+			</div>
+		</div> -->
+	</div>
+</div>

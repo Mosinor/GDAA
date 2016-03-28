@@ -1,0 +1,103 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4 class="text-primary">Network Interface Configuration</h4>
+	</div>
+	<div class="panel-body">
+
+		<form class="form-horizontal"
+			ng-class="{'has-success':netSettingSuccess, 'has-error':netSettingError}"
+			ng-controller="netCtrl" data-ng-init="getNetParam()">
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-7">
+					<div class="checkbox">
+						<label> <input type="checkbox"
+							ng-model="allowChangeNetSetting"> Change Config</input>
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="address" class="col-sm-3 control-label">IP
+					Address</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="address"
+						placeholder="IPv4 address" ng-model="ethConfig.address"
+						ng-disabled="!allowChangeNetSetting"></input>
+
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="netmask" class="col-sm-3 control-label">Subnet
+					Mask</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="netmask"
+						placeholder="IPv4 Netmask" ng-model="ethConfig.netmask"
+						ng-disabled="!allowChangeNetSetting"> </input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="gateway" class="col-sm-3 control-label">Default
+					Gateway</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="gateway"
+						placeholder="IPv4 Gateway" ng-model="ethConfig.gateway"
+						ng-disabled="!allowChangeNetSetting"> </input>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-2">
+					<button type="submit" class="btn btn-primary"
+						ng-click="setNetParam()" ng-disabled="!allowChangeNetSetting">Submit</button>
+				</div>
+				<div class="col-sm-5"
+					ng-class="{'text-danger':netSettingError,'text-success':netSettingSuccess}">
+					<p data-ng-init="netSettingResultShow=0"
+						ng-show="netSettingResultShow">
+						<small>{{ netSettingResult }}</small>
+					</p>
+				</div>
+
+			</div>
+		</form>
+		<form class="form-horizontal" ng-controller="pingHostCtrl">
+			<br />
+			<div class="form-group">
+				<label for="pingHost" class="col-sm-3 control-label">Ping
+					Host</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="pingHost"
+						placeholder="Host Address" ng-model="pingHost.hostAddress"> </input>
+				</div>
+				<div class="col-sm-3">
+					<select class="form-control" ng-model="pingHost.pingCount">
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+						<option>9</option>
+						<option>10</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-2">
+					<button type="submit" class="btn btn-primary" ng-click="pingHostFunc()">Ping</button>
+				</div>
+
+
+			</div>
+			<div class="alert alert-dismissable alert-info">
+
+				<button type="button" class="close" data-dismiss="alert"
+					aria-hidden="true">×</button>
+				<h4>Ping Result:</h4>
+				<small style="white-space: pre-line">{{pingResult}}</small>
+			</div>
+		</form>
+	</div>
+</div>

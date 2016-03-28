@@ -1,0 +1,82 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4 class="text-primary">Data Logging Status</h4>
+	</div>
+	<div class="panel-body" ng-controller="statusCtrl" data-ng-init="getDiskStatus();getSessionStatus()">
+
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr class="active">
+					<th>Total Space</th>
+					<th>In Use</th>
+					<th>Available</th>
+					<th>Ringe Buffer</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="success">
+					<td>{{totalSpace}}</td>
+					<td>{{inUse}}</td>
+					<td>{{available}}</td>
+					<td><input type="checkbox" ng-model="ringBuffer" ng-disabled="true"></input></td>
+					<td>
+						<button type="button" class="btn btn-warning btn-xs">
+							Clear Disk </button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br />
+		<h4 class="text-primary">Current Sessions</h4>
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr class="active">
+					<th>#</th>
+					<th>Name</th>
+					<th>Schedule</th>
+					<th>Status</th>
+					<th>Enable</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="session in allSessions">
+					<td ng-if="$odd">{{ $index + 1 }}</td>
+					<td ng-if="$even" class="active">{{ $index	+ 1 }}</td>
+				
+					<td ng-if="$odd">{{ session.sessionName }}</td>
+					<td ng-if="$even" class="active">{{ session.sessionName }}</td>
+				
+					<td ng-if="$odd">starts at: {{ session.startTime }}, {{ session.duration }} min</td>
+					<td ng-if="$even" class="active">starts at: {{ session.startTime }}, {{ session.duration }} min</td>
+				
+					<td ng-if="$odd">{{ ( session.enable ? 'active' : 'inactive' ) }}</td>
+					<td ng-if="$even" class="active">{{ ( session.enable ? 'active' : 'inactive' ) }}</td>
+				
+					<td ng-if="$odd"><input type="checkbox"
+						ng-model="session.enable"></input></td>
+					<td ng-if="$even" class="active"><input
+						type="checkbox" ng-model="session.enable"></input></td>
+					</tr>
+					<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td>
+						<button type="button" class="btn btn-success btn-xs" ng-click="applySessionChanges()">
+							Apply</button>
+					</td>
+					
+					</tr>
+			</tbody>
+		</table>
+		<!-- 
+		<table>
+			<tr ng-repeat="result in applySessionChangesResult" >
+				<td > {{ result }}	</td>
+
+			</tr>
+		</table>  -->
+	</div>
+</div>

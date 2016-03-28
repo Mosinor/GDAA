@@ -1,0 +1,206 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h4 class="text-primary">Create New Session</h4>
+	</div>
+	<div class="panel-body" ng-controller="statusCtrl">
+
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-3">
+					<div class="checkbox">
+						<label> <input type="checkbox" ng-model="sessionProgram.enable" data-ng-init="sessionProgram.enable = true"> Enable Session</input>
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="checkbox">
+						<label> <input type="checkbox" ng-model="sessionProgram.dailyRepeat" data-ng-init="sessionProgram.dailyRepeat = false">Repeat This Session
+							Daily </input>
+						</label>
+					</div>
+				</div>
+
+			</div>
+			<div class="form-group">
+				<label for="sessionName" class="col-sm-3 control-label">Session
+					Name</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="sessionName" ng-model="sessionProgram.sessionName"></input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="epochInterval" class="col-sm-3 control-label">Epoch
+					Interval</label>
+				<div class="col-sm-7">
+					<select type="text" class="form-control" id="epochInterval" ng-model="sessionProgramEpoch">
+						<option>1 Second</option>
+						<option>5 Second</option>
+						<option>15 Second</option>
+						<option>30 Second</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="startDate" class="col-sm-3 control-label">Start
+					Date</label>
+				<div class="col-sm-2">
+					<select type="text" class="form-control" id="startDate" ng-model="sessionProgramDate.year">
+						<option>2015</option>
+						<option>2016</option>
+						<option>2017</option>
+						<option>2018</option>
+						<option>2019</option>
+						<option>2020</option>
+						<option>2021</option>
+						<option>2022</option>
+						<option>2023</option>
+						<option>2024</option>
+						<option>2025</option>
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<select type="text" class="form-control" ng-model="sessionProgramDate.month">
+						<option>Jan-01</option>
+						<option>Feb-02</option>
+						<option>Mar-03</option>
+						<option>Apr-04</option>
+						<option>May-05</option>
+						<option>Jun-06</option>
+						<option>Jul-07</option>
+						<option>Aug-08</option>
+						<option>Sep-09</option>
+						<option>Oct-10</option>
+						<option>Nov-11</option>
+						<option>Dec-12</option>
+					</select>
+				</div>
+				<div class="col-sm-2">
+					<select type="number" class="form-control" ng-model="sessionProgramDate.day">
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+						<option>9</option>
+						<option>10</option>
+						<option>11</option>
+						<option>12</option>
+						<option>13</option>
+						<option>14</option>
+						<option>15</option>
+						<option>16</option>
+						<option>17</option>
+						<option>18</option>
+						<option>19</option>
+						<option>20</option>
+						<option>21</option>
+						<option>22</option>
+						<option>23</option>
+						<option>24</option>
+						<option>25</option>
+						<option>26</option>
+						<option>27</option>
+						<option>28</option>
+						<option>29</option>
+						<option>30</option>
+						<option>31</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="startTime" class="col-sm-3 control-label">Start
+					Time (GPS)</label>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" id="startTime"
+						placeholder="hh:mm" ng-model="sessionProgramDate.time"> </input>
+				</div>
+				<label for="duration" class="col-sm-1 control-label">Duration</label>
+				<div class="col-sm-2">
+					<input type="number" class="form-control" id="duration"
+						placeholder="Minutes" ng-model="sessionProgram.duration"> </input>
+				</div>
+				<div class="col-sm-3"> 
+				
+				<label for="sessionID" class="col-sm-2 control-label">ID</label>
+				<div class="col-sm-6">
+					<select type="text" class="form-control" id="sessionID" ng-model="sessionProgram.id">
+						<option>0</option>
+						<option>1</option>
+						<option>2</option>
+						<option>3</option>
+						<option>4</option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+						<option>9</option>
+						<option>a</option>
+						<option>b</option>
+						<option>c</option>
+						<option>d</option>
+						<option>e</option>
+						<option>f</option>
+						<option>g</option>
+						<option>h</option>
+						<option>i</option>
+						<option>j</option>
+						<option>k</option>
+						<option>l</option>
+						<option>m</option>
+						<option>n</option>
+						<option>o</option>
+						<option>p</option>
+						<option>q</option>
+						<option>r</option>
+						<option>s</option>
+						<option>t</option>
+						<option>u</option>
+						<option>v</option>
+						<option>w</option>
+						<option>x</option>
+						<option>y</option>
+						<option>z</option>
+					</select>
+				</div>
+				
+				
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="ipAddress" class="col-sm-3 control-label">IP
+					Address</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="ipAddress"
+						placeholder="ip address (IPv4)" ng-model="sessionProgram.host"> </input>
+				</div>
+				<label for="tcpPort" class="col-sm-2 control-label">TCP Port</label>
+				<div class="col-sm-2">
+					<input type="number" class="form-control" id="tcpPort"
+						placeholder="Port No." ng-model="sessionProgram.port"> </input>
+				</div>
+			</div>
+			<!--  div class="form-group">
+				<div class="col-sm-offset-3 col-sm-3">
+					<div class="checkbox">
+						<label> <input type="checkbox" checked ng-disabled="true">FTP Push</input>
+						</label>
+					</div>
+				</div>
+				<div class="radio  col-sm-2">
+					<label> <input type="radio" name="optionsRadios"
+						id="optionsRadios1" value="server1" checked> Server1
+					</label>
+				</div>
+			</div> -->
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-6">
+					<button type="submit" class="btn btn-primary" ng-click="setSessionInfo()">Submit</button>
+				</div>
+			</div>
+		</form>
+
+	</div>
+</div>

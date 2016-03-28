@@ -1,0 +1,1 @@
+{"host":"10.100.30.178","port":"21","user":"ftpuser1","password":"123","remotedir":"/","runftp":false,"webserverport":"4444","ftplog":"/root/workspace/configDir/ftp.log","errorlog":"/root/workspace/configDir/error.log","localdir":"/root/workspace/data","retryinterval":"300000"}

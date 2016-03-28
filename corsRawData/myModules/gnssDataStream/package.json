@@ -1,0 +1,14 @@
+{
+  "name": "gnssDataStream",
+  "version": "0.0.0",
+  "description": "a module to send gnss data stream",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "sntp": "~1.0.9"
+  }
+}

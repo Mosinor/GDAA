@@ -1,0 +1,309 @@
+var fs = require('fs');
+var path = require('path');
+var FtpClient = require('../ftp');
+
+var logFile = './ftpClient.log';
+var errorLogFile = './ftpError.log';
+
+var uploadFile = function(ftpOptions, fileName, localDir, remoteDir, myFn) {
+	var myFtp = new FtpClient();
+
+	myFtp.on('ready', function() {
+		
+	if (remoteDir != "/") {
+		myFtp.cwd(remoteDir, function(err) {
+			if (err) {
+				writeFtpLog(logFile, errorLogFile, 'error cd in remote dir: '+ err);
+				myFtp.mkdir(remoteDir, 1, function(err) {
+					if (err) {
+						writeFtpLog(logFile, errorLogFile, 'error create remote dir: '+ err);
+						myFtp.end();
+						return myFn(err);
+					} else {
+						myFtp.cwd(remoteDir, function(err) {
+							if (err) {
+								writeFtpLog(logFile, errorLogFile, 'error cd in remote dir after creation' + err);
+								myFtp.end();
+								return myFn(err);
+							} else {
+								myFtp.put(path.join(localDir, fileName), fileName,
+										function(err) {
+											if (err) {
+												myFtp.end();
+												writeFtpLog(logFile, errorLogFile, 'Error puting '+ fileName + ' to ftp server: ' + err);
+												return myFn(err);
+											}
+											writeFtpLog(logFile, errorLogFile, 'The file '+ fileName + ' successfully uploaded to ftp server');
+											myFtp.end();
+											return myFn(err);
+										});
+							}
+						});
+					}
+				});
+
+			} else {
+				// TODO: handle exception
+				myFtp.size(fileName, function(Error, number) {
+					if (Error && Error.code != 550) {
+						writeFtpLog(logFile, errorLogFile, 'Error reading size of '+ fileName + ' from ftp server: ' + Error.code);
+						return myFn(Error.code);
+					}
+					if (Error.code == 550) number=0;
+					fs.stat(fileName, function(err, stats) {
+						if (err) return myFn(Error);
+						writeFtpLog(logFile, errorLogFile, 'Size of file ' + fileName + ' for ftp: ' + stats.size + ' and the same file on server: ' + number);
+
+						if (stats.size > number) {
+							writeFtpLog(logFile, errorLogFile, 'Trying to put ' + path.join(localDir, fileName) + ' with size '  + stats.size + ' to ftp server');
+							myFtp.put(path.join(localDir, fileName), fileName, function(err) {
+								if (err) {
+									writeFtpLog(logFile, errorLogFile,  'Error puting '+ fileName + ' to ftp server: ' + err);
+									myFtp.end();
+									return myFn(err);
+								}
+								writeFtpLog(logFile, errorLogFile, 'Putting ' + fileName + ' with size '  + stats.size + ' to ftp server');
+								myFtp.end();
+								return myFn(err);
+							});
+
+						}
+						myFtp.end();
+						return myFn(err);
+
+					});
+				});
+
+			}
+		});
+		
+	} else {
+			// TODO: handle exception
+			myFtp.size(fileName, function(error, number) {
+				if (error) {
+					if (error.code == 550){
+						myFtp.put(path.join(localDir, fileName), fileName, function(err) {
+							if (err) {
+								writeFtpLog(logFile, errorLogFile, 'Error puting '+ fileName + ' to ftp server: ' + err);
+								myFtp.end();
+								return myFn(err);
+	
+							}
+							myFtp.end();
+							return myFn(err);
+						});
+					} else {
+						return myFn(Error.code);
+					}
+				} else {
+					fs.stat(path.join(localDir, fileName), function(err, stats) {
+						if (err) return myFn(Error);
+						writeFtpLog(logFile, errorLogFile, 'Size of file ' + fileName + ' for ftp: ' + stats.size + ' and the same file on server: ' + number);
+		
+						if (stats.size > number) {
+		
+							myFtp.put(path.join(localDir, fileName), fileName, function(err) {
+								if (err) {
+									writeFtpLog(logFile, errorLogFile, 'Error puting '+ fileName + ' to ftp server: ' + err);
+									myFtp.end();
+									return myFn(err);
+		
+								}
+								myFtp.end();
+								return myFn(err);
+							});
+		
+						}
+						myFtp.end();
+						return myFn(err);
+		
+					});
+
+				}
+			});
+		}
+
+	});
+
+	myFtp.on('error', function(err) {
+		return myFn('ftp error:::', err);
+	});
+
+	myFtp.connect(ftpOptions);
+
+};
+
+var getDirFileList = function(localDir, myFn) {
+	var fileList = [];
+	fs.readdir(localDir, function(err, files) {
+		var counter = files.length;
+		if (err) {
+			return myFn(err, fileList);
+		} else {
+			if (!counter)
+				return myFn(err, fileList);
+
+			files.forEach(function(item, i) {
+				item = path.join(localDir, item);
+
+				fs.stat(item, function(err, stats) {
+					if (err) {
+						return myFn(err, fileList);
+					} else {
+						if (stats.isDirectory()) {
+							getDirFileList(item, function(err, myFileList) {
+								fileList = fileList.concat(myFileList);
+								if (!--counter) {
+									myFn(err, fileList);
+								}
+							});
+						} else {
+							fileList.push(item);
+							if (!--counter) {
+								myFn(err, fileList);
+							}
+						}
+					}
+				});
+
+			});
+
+		}
+	});
+
+};
+
+var ftpPush = function(configFilePath, localDir, myFn) {
+	var msg;
+	getFtpConfig(configFilePath, function(err, ftpInfo) {
+		if (err) {
+			msg = 'cannot get ftp server config, set it again';
+			writeFtpLog(logFile, errorLogFile, msg);
+			return myFn(err, msg);
+		} else {
+			//TODO: handle exception
+			var ftpInfo =  JSON.parse(ftpInfo);
+				
+			var ftpOptions = {
+				host : ftpInfo.host,
+				port : ftpInfo.port,
+				user : ftpInfo.user,
+				password : ftpInfo.password
+			};
+			var remoteDir = ftpInfo.remotedir;
+			getDirFileList(localDir, function(err, myFileList) {
+				myFileList.forEach(function(file, i) {
+					var filename = path.basename(file);
+					var localDir = path.dirname(file);
+					uploadFile(ftpOptions, filename, localDir, remoteDir,
+							function(err) {
+								if (err) {
+									msg = 'cannot upload ' + filename;
+									return myFn(err, msg);
+								} else {
+									writeFtpLog(logFile, errorLogFile, 'The file '+ fileName + ' successfully uploaded to ftp server');
+								}
+
+							});
+				});
+
+			});
+
+		}
+
+	});
+};
+
+var getFtpConfig = function(configFilePath, myFn) {
+	var ftpInfo;
+
+	fs.readFile(configFilePath, function(err, data) {
+		if (err) {
+			ftpInfo = '';
+			return myFn(err, ftpInfo);
+		} else {
+			try {
+				var ftpInfo = JSON.parse(data);
+				ftpInfo = {
+					host : ftpInfo.host,
+					port : ftpInfo.port,
+					user : ftpInfo.user,
+					password : ftpInfo.password,
+					remotedir : ftpInfo.remotedir
+				};
+				return myFn(err, JSON.stringify(ftpInfo));
+			} catch (error) {
+				ftpInfo = '';
+				return myFn(error, ftpInfo);
+			}
+		}
+	});
+};
+
+var setFtpConfig = function(reqData, configFilePath, localFilesDir, myFn) {
+	var msg;
+	var ftpConfig;
+	getFtpConfig(configFilePath, function(err, ftpInfo) {
+		if (err) {
+			ftpConfig = {
+				host : reqData.host,
+				port : reqData.port,
+				user : reqData.user,
+				password : reqData.password,
+				remotedir : reqData.remotedir,
+				localdir : localFilesDir
+			};
+		} else {
+			ftpConfig = {
+				host : (reqData.host ? reqData.host : ftpInfo.host),
+				port : (reqData.port ? reqData.port : ftpInfo.port),
+				user : (reqData.user ? reqData.user : ftpInfo.user),
+				password : (reqData.password ? reqData.password
+						: ftpInfo.password),
+				remotedir : (reqData.remotedir ? reqData.remotedir
+						: ftpInfo.remotedir),
+				localdir : localFilesDir
+			};
+		}
+		try {
+			fs.writeFile(configFilePath, JSON.stringify(ftpConfig), 'utf8',
+					function(err) {
+						if (err) {
+							msg = "Faild to change config file.";
+							writeFtpLog(logFile, errorLogFile, msg);
+							return myFn(err, msg);
+						} else {
+							msg = "Config file has been changed successfully.";
+							writeFtpLog(logFile, errorLogFile, msg);
+							return myFn(err, msg);
+						}
+					});
+		} catch (err) {
+			msg = "Cannot set ftp config";
+			writeFtpLog(logFile, errorLogFile, msg);
+			return myFn(err, msg);
+		}
+	});
+};
+
+var writeFtpLog = function(logFile, errorLogFile, logContent){
+	var myDate = new Date();
+	logContent = myDate.toUTCString() + "---" + logContent + "\n\r";
+	fs.appendFile(logFile, logContent, function(err) {
+		if (err) {
+			errorLogContent = myDate.toUTCString() + "---" +  err + " Error writing ftp log " + logContent;
+			fs.appendFile(errorLogFile, errorLogContent, function(err) {
+				 if (err) throw err;
+			});
+		}
+	});
+};
+
+module.exports = {
+	uploadFile : uploadFile,
+	setFtpConfig : setFtpConfig,
+	getFtpConfig : getFtpConfig,
+	ftpPush : ftpPush,
+	getDirFileList : getDirFileList,
+	writeFtpLog : writeFtpLog
+	};

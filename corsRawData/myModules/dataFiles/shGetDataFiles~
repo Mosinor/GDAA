@@ -1,0 +1,6 @@
+#! /bin/bash
+
+dataFiles=`echo $@ | tr -s ' '`
+zipFileName=`date +%G%m%d%H%M%S`
+zip -q $zipFileName.zip $dataFiles
+echo $zipFileName.zip | tr -d '\n'

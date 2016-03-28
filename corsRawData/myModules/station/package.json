@@ -1,0 +1,15 @@
+{
+  "name": "station",
+  "version": "1.0.0",
+  "description": "a module to create a station with various link as data provider or data consumer",
+  "main": "station.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mostafa hoseini",
+  "license": "ISC",
+  "dependencies": {
+    "csv": "^0.4.6",
+    "mime": "^1.3.4"
+  }
+}

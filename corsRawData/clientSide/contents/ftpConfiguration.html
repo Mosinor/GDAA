@@ -1,0 +1,101 @@
+<div class="panel panel-default" ng-controller="ftpConfiguration" data-ng-init="getFtpClient()">
+	<div class="panel-heading">
+		<!-- <h4 class="text-primary">FTP Server Setting</h4>  -->
+		<h4 class="text-primary">FTP Push Setting</h4>
+	</div>
+	<div class="panel-body">
+
+		<!-- <form class="form-horizontal">
+			<div class="form-group">
+				<label for="ftpServer" class="col-sm-3 control-label">Local
+					FTP Server</label>
+				<div class="col-sm-3" id="ftpServer">
+					<div class="checkbox">
+						<label> <input type="checkbox"> Enable Service</input>
+						</label>
+					</div>
+				</div>
+				<label for="tcpPort" class="col-sm-2 control-label">Listen
+					Port</label>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" id="tcpPort"
+						placeholder="Port No."> </input>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-6">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</div>
+
+		</form>
+		<br /> 
+		<h4 class="text-primary">FTP Push Setting</h4> -->
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label for="selectRemoteFTP" class="col-sm-3 control-label">Remote
+					FTP Server</label>
+				<div class="col-sm-3">
+					<select type="text" class="form-control" id="selectRemoteFTP">
+						<option>Server1</option>
+					</select>
+				</div>
+				<div class="checkbox col-sm-offset-2 col-sm-4">
+						<label> <input type="checkbox" ng-model="ftpClient.runftp"> Enable FTP Push</input>
+						</label>
+				</div>
+				
+			</div>
+			<div class="form-group">
+				<label for="serverAddress" class="col-sm-3 control-label">Server
+					Address</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="serverAddress"
+						placeholder="IPv4 address" ng-model="ftpClient.host"> </input>
+				</div>
+				<label for="tcpPort" class="col-sm-1 control-label"> Port</label>
+				<div class="col-sm-3">
+					<input type="text" class="form-control" id="tcpPort"
+						placeholder="Port No." ng-model="ftpClient.port"> </input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="username" class="col-sm-3 control-label">Username</label>
+				<div class="col-sm-4">
+					<input type="text" class="form-control" id="username"
+						placeholder="Username" ng-model="ftpClient.user"> </input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="password" class="col-sm-3 control-label">
+					Password</label>
+				<div class="col-sm-3">
+					<input type="password" class="form-control" id="password"
+						placeholder="Password" ng-model="ftpClient.password"> </input>
+				</div>
+				<label for="verifyPassword" class="col-sm-2 control-label">
+					Verify</label>
+				<div class="col-sm-3">
+					<input type="password" class="form-control" id="verifyPassword"
+						placeholder="Password" ng-model="verifyPassword"> </input>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="remoteDirectory" class="col-sm-3 control-label">Remote
+					Directory</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="remoteDirectory"
+						placeholder="/" ng-model="ftpClient.remotedir"> </input>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-3 col-sm-6">
+					<button type="submit" class="btn btn-info" ng-click="testFtpClient()">Test FTP Connection</button>
+				</div>
+				<div class="col-sm-3">
+					<button type="submit" class="btn btn-primary" ng-click="setFtpClient()">Submit</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,7 @@
+#! /bin/bash
+
+ifconfig eth0 | grep "inet addr" | tr -s " " | cut -d" " -f3,5 | tr " " ":" | cut -d":" -f2,4 | tr "\n\r" ":"
+
+ip route | grep "default" | tr -s " " | cut -d " " -f3 |  tr -d "\n\r"
+
+exit 0

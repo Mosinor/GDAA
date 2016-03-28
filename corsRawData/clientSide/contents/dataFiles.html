@@ -1,0 +1,67 @@
+<div class="panel panel-default" ng-controller="dataFilesCtrl">
+	<div class="panel-heading">
+		<h4 class="text-primary">Data Files</h4>
+		
+	</div>
+	
+	<div class="panel-body" data-ng-init="getDataList(); selectAll = 0;">
+					<label for="search" class="control-label">Search</label>
+				<div>
+					<input type="text" class="form-control" id="search"
+						placeholder="Type some text to filter" ng-model="search" data-ng-init="search=''" ng-change="searchFiles(true)"> </input>
+				</div>
+	<br/>
+
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr class="active">
+					<th>#</th>
+					<th>File Name</th>
+					<th>Date</th>
+					<th>Size (KB)</th>
+					<th><input type="checkbox" ng-model="selectAll" ng-change="changeAllCheckBox()"></input></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="file in dataList">
+					<td ng-if="$odd">{{ $index + 1 }}</td>
+					<td ng-if="$even" class="active">{{ $index
+						+ 1 }}</td>
+					<td ng-if="$odd">{{ file.name }}</td>
+					<td ng-if="$even" class="active">{{
+						file.name }}</td>
+					<td ng-if="$odd">{{ file.date }}</td>
+					<td ng-if="$even" class="active">{{
+						file.date }}</td>
+					<td ng-if="$odd">{{ file.size }}</td>
+					<td ng-if="$even" class="active">{{
+						file.size }}</td>
+					<td ng-if="$odd"><input type="checkbox"
+						ng-model="selectedFiles[$index]"></input></td>
+					<td ng-if="$even" class="active"><input
+						type="checkbox" ng-model="selectedFiles[$index]"></input></td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	<div class="panel-footer">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-4">
+						<button type="button" class="btn btn-danger btn-default" ng-click="deleteFiles();">
+							Delete Selected Items</button>
+					</div>
+					<div class="col-md-4">
+					</div>
+					<div class="col-md-4">
+						<button type="button" class="btn btn-primary"
+							ng-click="getDataFiles();">Download Selected Items</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

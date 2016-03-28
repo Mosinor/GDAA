@@ -1,0 +1,11 @@
+{
+  "name": "netSetting",
+  "version": "0.0.0",
+  "description": "a module for get or set network settings ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mostafa hoseini",
+  "license": "BSD-2-Clause"
+}

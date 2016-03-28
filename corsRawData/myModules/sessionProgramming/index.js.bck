@@ -1,0 +1,254 @@
+// TODO: Error Handling & Input Data Validation
+
+var fs = require('fs');
+var path = require('path');
+var dataArchiver = require('./dataArchiver');
+
+var allDataArchivers = new Array();
+
+var getDirFileList = function(localDir, myFn) {
+	var fileList = [];
+	fs.readdir(localDir, function(err, files) {
+		var counter = files.length;
+		if (err) {
+			return myFn(err, fileList);
+		} else {
+			if (!counter)
+				return myFn(err, fileList);
+
+			files.forEach(function(item, i) {
+				item = path.join(localDir, item);
+
+				fs.stat(item, function(err, stats) {
+					if (err) {
+						return myFn(err, fileList);
+					} else {
+						if (stats.isDirectory()) {
+							getDirFileList(item, function(err, myFileList) {
+								fileList = fileList.concat(myFileList);
+								if (!--counter) {
+									myFn(err, fileList);
+								}
+							});
+						} else {
+							fileList.push(item);
+							if (!--counter) {
+								myFn(err, fileList);
+							}
+						}
+					}
+				});
+
+			});
+
+		}
+	});
+
+};
+
+
+var createNewSession = function(configDir, options, myFn) {
+	var duplicateSessionID = false;
+
+	getSessions(configDir, function(err, sessions) {
+		if (err) {
+			return myFn(err);
+		}
+		console.log('retreived sessions: ', sessions);
+		sessions.forEach(function(session, i) {
+			if(session.id == options.id && session.sessionName != options.sessionName){
+				duplicateSessionID = true;
+				return myFn('Duplicate session name');
+			}
+
+		});
+		if (!duplicateSessionID) {
+			try {
+				fs.writeFile(path.join(configDir, options.sessionName + '.ses'), JSON
+						.stringify(options));
+				myFn();
+			} catch (err) {
+				myFn(err);
+			}
+		}
+	});
+};
+
+var getSessions = function(configDir, myFn) {
+	var sessions = [];
+	getDirFileList(configDir, function(err, myFileList) {
+		if (err) {
+			return myFn(err, null);
+		}
+		
+		var allConfigFiles = myFileList.filter(function(elt, i) {
+			return path.extname(elt) == '.ses';
+		});
+		
+		if (allConfigFiles.length != 0) {
+			
+			allConfigFiles.forEach(function(configFile, i) {
+				try {
+					fs.readFile(configFile, function(err, data) {
+						sessions.push(JSON.parse(data));
+						if ((i + 1) == allConfigFiles.length) {
+							return myFn(null, sessions);
+						}
+					});
+				} catch (e) {
+					// TODO: handle exception
+					return myFn(e, null);
+				}
+
+			});
+
+
+		} else {
+			return myFn('There aren\'t any sessions to show.', null);
+		}
+		
+	});
+};
+
+var processConfigFiles = function(configDir, loggingDir, myFn) {
+//	console.log(configDir, loggingDir);
+	getDirFileList(
+			configDir,
+			function(err, myFileList) {
+				if (err) {
+					return myFn(err);
+				}
+				var allConfigFiles = myFileList.filter(function(elt, i) {
+					return path.extname(elt) == '.ses';
+				});
+
+				allConfigFiles
+						.forEach(function(configFile, i) {
+							fs
+									.readFile(
+											configFile,
+											function(err, data) {
+												if (err) {
+													return;
+												}
+												try {
+													var sessionConfig = JSON
+															.parse(data);
+													// console.log(i,
+													// sessionConfig);
+
+													if (sessionConfig.enable == true) {
+
+														var timeToFire = sessionConfig.startDate
+																- Date.now();
+														if (sessionConfig.dailyRepeat == true
+																&& timeToFire < 0) {
+															timeToFire %= 86400000;
+														}
+														//console.log(timeToFire);
+														//console
+														//		.log(timeToFire
+														//				+ parseInt(sessionConfig.duration)
+														//				* 60000);
+
+														if (timeToFire > 0) {
+															var myDA = dataArchiver(
+																	{
+																		host : sessionConfig.host,
+																		port : sessionConfig.port
+																	},
+																	path.join(configDir,'main.cfg'), loggingDir, sessionConfig.id);
+															//console.log(path.join(configDir,'main.cfg'), loggingDir, sessionConfig.id);
+															setTimeout(
+																	function() {
+																		myDA
+																				.startArchiver();
+																	},
+																	timeToFire);
+
+															setTimeout(
+																	function() {
+																		myDA
+																				.stopArchiver();
+																		
+																		//TODO: start again for next day archiving
+																		
+																	},
+																	timeToFire
+																			+ parseInt(sessionConfig.duration)
+																			* 60000);
+
+															allDataArchivers[i] = myDA;
+
+														} else if (timeToFire < 0
+																&& (timeToFire + parseInt(sessionConfig.duration) * 60000) > 0) {
+															var myDA = dataArchiver(
+																	{
+																		host : sessionConfig.host,
+																		port : sessionConfig.port,
+																	},
+																	path.join(configDir,'main.cfg'), loggingDir, sessionConfig.id);
+
+															myDA
+																	.startArchiver();
+
+															setTimeout(
+																	function() {
+																		myDA
+																				.stopArchiver();
+																	},
+																	timeToFire
+																			+ parseInt(sessionConfig.duration)
+																			* 60000);
+
+															console
+																	.log(timeToFire
+																			+ parseInt(sessionConfig.duration)
+																			* 60000);
+															allDataArchivers[i] = myDA;
+														}
+													}
+
+												} catch (e) {
+													// TODO: handle exception
+													console.log(e);
+												}
+
+											});
+
+						});
+					return myFn();
+			});
+
+};
+
+var deleteSession = function(configDir, sessionName, myFn) {
+	var fileName = path.join(configDir , sessionName + '.ses');
+	console.log(fileName);
+	fs.unlink(fileName, function(err) {
+		console.log(err);
+		myFn(err);
+	});
+};
+
+var stopAllSessions = function(myFn) {
+	try {
+		allDataArchivers.forEach(function(dataArchiver, i) {
+			dataArchiver.stopArchiver();
+			if ( (i+1) == allDataArchivers.length) {
+				myFn();
+			}
+		});
+
+	} catch (e) {
+		myFn(e);
+	}
+};
+
+module.exports = {
+	processConfigFiles : processConfigFiles,
+	getSessions : getSessions,
+	createNewSession : createNewSession,
+	deleteSession : deleteSession,
+	stopAllSessions : stopAllSessions
+};

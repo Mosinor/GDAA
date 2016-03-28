@@ -1,0 +1,61 @@
+Fri, 16 Oct 2015 08:54:34 GMT---salam
+Fri, 16 Oct 2015 09:02:49 GMT---Error: Timeout
+Fri, 16 Oct 2015 09:03:44 GMT---successfully update time offset: 118.276611328125 ms
+Fri, 16 Oct 2015 09:04:44 GMT---successfully update time offset: 129.55810546875 ms
+Fri, 16 Oct 2015 09:05:44 GMT---successfully update time offset: 116.9224853515625 ms
+Fri, 16 Oct 2015 09:06:44 GMT---successfully update time offset: 137.890869140625 ms
+Fri, 16 Oct 2015 09:07:49 GMT---Error: Timeout
+Fri, 16 Oct 2015 09:08:44 GMT---successfully update time offset: 116.696533203125 ms
+Fri, 16 Oct 2015 09:09:44 GMT---successfully update time offset: 118.734619140625 ms
+Fri, 16 Oct 2015 09:10:44 GMT---successfully update time offset: 89.9844970703125 ms
+Fri, 16 Oct 2015 09:11:44 GMT---successfully update time offset: 118.341796875 ms
+Fri, 16 Oct 2015 09:12:45 GMT---successfully update time offset: 149.0594482421875 ms
+Fri, 16 Oct 2015 09:13:49 GMT---Error: Timeout
+Fri, 16 Oct 2015 09:14:45 GMT---successfully update time offset: 149.9052734375 ms
+Fri, 16 Oct 2015 09:15:49 GMT---Error: Timeout
+Fri, 16 Oct 2015 09:16:50 GMT---Error: Timeout
+Fri, 16 Oct 2015 09:17:45 GMT---successfully update time offset: 120.5145263671875 ms
+Fri, 16 Oct 2015 09:18:45 GMT---successfully update time offset: 62.0501708984375 ms
+Fri, 16 Oct 2015 09:19:45 GMT---successfully update time offset: 122.333251953125 ms
+Fri, 16 Oct 2015 09:20:45 GMT---successfully update time offset: 156.019287109375 ms
+Fri, 16 Oct 2015 09:21:45 GMT---successfully update time offset: 122.5775146484375 ms
+Fri, 16 Oct 2015 09:22:45 GMT---successfully update time offset: 143.7742919921875 ms
+Fri, 16 Oct 2015 13:34:04 GMT---The time offset successfully updated: 52.5264892578125 ms
+Fri, 16 Oct 2015 13:35:04 GMT---The time offset successfully updated: 46.9239501953125 ms
+Fri, 16 Oct 2015 13:36:04 GMT---The time offset successfully updated: -31.377197265625 ms
+Fri, 16 Oct 2015 13:37:04 GMT---The time offset successfully updated: 19.9356689453125 ms
+Fri, 16 Oct 2015 13:38:04 GMT---The time offset successfully updated: 52.4693603515625 ms
+Fri, 16 Oct 2015 13:39:04 GMT---The time offset successfully updated: 48.037841796875 ms
+Fri, 16 Oct 2015 13:40:04 GMT---The time offset successfully updated: 48.7484130859375 ms
+Fri, 16 Oct 2015 13:41:09 GMT---Error: Timeout
+Fri, 16 Oct 2015 13:42:05 GMT---The time offset successfully updated: 50.6298828125 ms
+Fri, 16 Oct 2015 13:43:05 GMT---The time offset successfully updated: 52.3004150390625 ms
+Fri, 16 Oct 2015 13:44:05 GMT---The time offset successfully updated: 51.5972900390625 ms
+Fri, 16 Oct 2015 13:45:05 GMT---The time offset successfully updated: 52.11474609375 ms
+Fri, 16 Oct 2015 13:46:05 GMT---The time offset successfully updated: 52.482177734375 ms
+Fri, 16 Oct 2015 13:47:05 GMT---The time offset successfully updated: 52.960205078125 ms
+Fri, 16 Oct 2015 13:48:10 GMT---Error: Timeout
+Fri, 16 Oct 2015 13:49:05 GMT---The time offset successfully updated: 53.8157958984375 ms
+Fri, 16 Oct 2015 13:50:05 GMT---The time offset successfully updated: 54.6932373046875 ms
+Fri, 16 Oct 2015 13:51:10 GMT---Error: Timeout
+Fri, 16 Oct 2015 13:52:05 GMT---The time offset successfully updated: 54.439208984375 ms
+Fri, 16 Oct 2015 13:53:05 GMT---The time offset successfully updated: 54.9488525390625 ms
+Fri, 16 Oct 2015 13:54:10 GMT---Error: Timeout
+Fri, 16 Oct 2015 13:55:05 GMT---The time offset successfully updated: 57.5733642578125 ms
+Fri, 16 Oct 2015 13:56:05 GMT---The time offset successfully updated: 56.1136474609375 ms
+Fri, 16 Oct 2015 13:57:05 GMT---The time offset successfully updated: 57.3275146484375 ms
+Fri, 16 Oct 2015 13:58:10 GMT---Error: Timeout
+Fri, 16 Oct 2015 13:59:10 GMT---Error: Timeout
+Fri, 16 Oct 2015 14:00:05 GMT---The time offset successfully updated: 13.5150146484375 ms
+Fri, 16 Oct 2015 14:01:05 GMT---The time offset successfully updated: -12.301025390625 ms
+Fri, 16 Oct 2015 14:02:05 GMT---The time offset successfully updated: -42.8460693359375 ms
+Fri, 16 Oct 2015 14:03:05 GMT---The time offset successfully updated: -42.2847900390625 ms
+Fri, 16 Oct 2015 14:04:05 GMT---The time offset successfully updated: -41.6026611328125 ms
+Fri, 16 Oct 2015 15:42:45 GMT---The time offset successfully updated: 38.2362060546875 ms
+Fri, 16 Oct 2015 15:43:50 GMT---Error: Timeout
+Fri, 16 Oct 2015 15:49:28 GMT---The time offset successfully updated: 40.646728515625 ms
+Fri, 16 Oct 2015 15:57:15 GMT---The time offset successfully updated: 44.0382080078125 ms
+Fri, 16 Oct 2015 15:59:07 GMT---Error: Timeout
+Fri, 16 Oct 2015 16:36:04 GMT---Error: Timeout
+Fri, 16 Oct 2015 16:39:30 GMT---The time offset successfully updated: 65.4259033203125 ms
+Fri, 16 Oct 2015 16:40:30 GMT---The time offset successfully updated: 62.1171875 ms
